@@ -1,197 +1,149 @@
-# TestTeller Agent
+# Test Case Generator
 
-[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
-[![PyPI](https://img.shields.io/pypi/v/testteller.svg)](https://pypi.org/project/testteller/)
-[![Docker](https://img.shields.io/docker/v/iavipro/testteller?label=docker&logo=docker)](https://hub.docker.com/r/iavipro/testteller)
-[![Tests](https://github.com/iAviPro/testteller-agent/actions/workflows/test-unit.yml/badge.svg)](https://github.com/iAviPro/testteller-agent/actions/workflows/test-unit.yml)
-[![Downloads](https://pepy.tech/badge/testteller)](https://pepy.tech/project/testteller)
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+An AI-powered test case generation platform for QA teams. It analyzes product requirements, backend APIs, and frontend flows, then generates structured test cases and executable automation suites from one clean web interface.
 
-**TestTeller** is the AI-powered Test agent that transforms your documentation into comprehensive test suites and executable automation code. Powered by a **dual-feedback RAG architecture** with support for multiple GenAI/LLMs (Google Gemini, OpenAI, Anthropic Claude, Local Llama), TestTeller analyzes your requirements, designs, and existing code to generate strategic test cases and automate them across **multiple programming languages** and **supported testing frameworks**.
+## Problem Statement
 
-## Why TestTeller?
+Writing comprehensive test cases manually takes a lot of time and often misses edge cases. QA teams need a faster way to turn requirements, API behavior, and application flows into reliable test coverage.
 
-TestTeller transforms documentation and code into comprehensive test strategies and executable automation. Unlike traditional testing tools, TestTeller uses dual-feedback RAG architecture to understand your requirements and generate intelligent test scenarios.
+## Solution
 
-### Test Types Generated
-- **End-to-End (E2E) Tests**: Complete user journeys across frontend, middleware, and backend services
-- **Integration Tests**: Component integration (FE-BE, service-to-service, event-driven) and contract validation  
-- **Technical Tests**: Performance, security, resilience testing with infrastructure focus
-- **Mocked System Tests**: Isolated component testing with mocked dependencies
+Test Case Generator provides a full-stack AI assistant that helps QA teams:
 
-### Critical Features
-- **Dual-Feedback RAG Enhancement**: Self-improving system that learns from generation cycles and stores high-quality outputs
-- **Multi-Provider LLM Support**: Works with Google Gemini, OpenAI, Anthropic Claude, and local Llama/Ollama
-- **Universal Document Intelligence**: Advanced parsing for PDFs, DOCX, XLSX, MD, TXT with context understanding
-- **Code Repository Analysis**: Ingests and analyzes code from GitHub repos or local folders.
+- Upload requirement documents such as TXT, Markdown, PDF, DOCX, and XLSX.
+- Add backend/API/frontend source code context from a local path or GitHub repository.
+- Generate unit, integration, end-to-end, API, and edge-case test scenarios.
+- Convert generated test cases into executable automation code.
+- Download generated test case files and automation suites.
 
-### Supported Languages & Frameworks  
-**Test Generation**: All test types with tabular summaries and detailed specifications  
-**Automation**: Python (pytest, unittest), JavaScript/TypeScript (Jest, Mocha, Cypress, Playwright), Java (JUnit, TestNG), and more
+## Features
 
-**Real-world workflow**: Ingest project (PRDs/Contracts/Design/Schema etc.) documentation & project code → Generate strategic test cases covering authentication, error handling, and edge cases → Create executable Selenium/Playwright automation with proper setup and assertions → Commit your code.
+- Professional React frontend with light and dark theme support.
+- FastAPI backend that wraps the existing TestTeller generation engine.
+- RAG-based context retrieval using ChromaDB.
+- Multi-provider LLM support through environment variables.
+- Supports Gemini, OpenAI, Claude, and local Llama/Ollama configuration.
+- Generates automation for Python, JavaScript, TypeScript, and Java test stacks.
+- In-memory job tracking for long-running ingestion and generation tasks.
+- Downloadable generated artifacts.
 
-## Key Features
+## Tech Stack
 
-- **🤖 Generator Agent**: Virtual Test architect with dual-feedback RAG enhancement - analyzes docs and generates strategic test cases with intelligent categorization (E2E, integration, security, edge cases)
-- **⚡ Automator Agent**: Multi-language code generation across **Python, JavaScript, TypeScript, Java** with **20+ framework support** (pytest, Jest, JUnit, Playwright, Cypress, Cucumber, etc.)
-- **🔧 Multi-Provider GenAI/LLM**: Choose your AI provider - **Google Gemini, OpenAI, Anthropic Claude**, or run completely **local with Llama/Ollama**
-- **📄 Universal Document Intelligence**: Advanced RAG ingestion for **PDFs, DOCX, XLSX, MD, TXT** - understands context and generates appropriate test focus
-- **🔄 Self-Learning System**: Dual-feedback architecture gets smarter with each use - stores high-quality outputs and learns from automation success patterns
+- Frontend: React, Vite, TypeScript, Tailwind CSS, Framer Motion, lucide-react
+- Backend: Python, FastAPI, Uvicorn
+- AI/RAG: LLM provider APIs, ChromaDB
+- Test generation core: TestTeller agent logic
+- Container support: Docker and Docker Compose
 
-→ **[View Detailed Features](docs/FEATURES.md)** | **[Technical Architecture](docs/ARCHITECTURE.md)**
+## Project Structure
 
-## Quick Start
-
-### Prerequisites
-- Python 3.11+
-- API key for at least one LLM provider:
-  - [Google Gemini](https://aistudio.google.com/) (recommended)
-  - [OpenAI](https://platform.openai.com/api-keys)
-  - [Anthropic Claude](https://console.anthropic.com/)
-  - [Ollama](https://ollama.ai/) (local or within accessible environment)
-
-### Installation
-
-#### Option 1: PyPI Installation
-```bash
-# Install from PyPI
-pip install testteller
+```text
+frontend/                 React web app
+testteller/api/           FastAPI backend routes, jobs, and services
+testteller/               Core test generation and automation logic
+tests/                    Unit tests
+docker-compose.yml        Full stack container setup
+.env.example              Safe sample environment file
 ```
 
-#### Option 2: Docker Installation
+## Setup
 
-**Quick Testing (Docker Hub Image):**
-```bash
-# Pull and run from Docker Hub for quick testing
-docker pull iavipro/testteller:latest
+Install Python dependencies:
 
-# Run single commands
-docker run -it \
-  -e GOOGLE_API_KEY=your_api_key \
-  -v $(pwd)/docs:/app/docs \
-  -v $(pwd)/output:/app/output \
-  iavipro/testteller:latest testteller --help
-
-# Example: Generate test cases
-docker run -it \
-  -e GOOGLE_API_KEY=your_api_key \
-  -v $(pwd):/app/workspace \
-  iavipro/testteller:latest testteller generate "API tests" --output-file /app/workspace/tests.pdf --collection-name my_collection
+```powershell
+pip install -r requirements.txt
 ```
 
-**Full Development Setup (Docker Compose):**
-```bash
-# Clone repository for complete setup with ChromaDB
-git clone https://github.com/iAviPro/testteller-agent.git
-cd testteller-agent
+Install frontend dependencies:
 
-# Setup environment variables
-cp .env.example .env
-# Edit .env file and add your API keys (GOOGLE_API_KEY, OPENAI_API_KEY, CLAUDE_API_KEY)
-
-# Start all services (TestTeller + ChromaDB)
-docker-compose up -d
-
-# Configure and use
-docker-compose exec app testteller configure
-docker-compose exec app testteller ingest-docs /path/to/document.pdf --collection-name project
-docker-compose exec app testteller generate "API integration tests" --collection-name project
-
-# Stop services
-docker-compose down
+```powershell
+cd frontend
+npm install
 ```
 
-#### Option 3: From Source
-```bash
-# Install from source
-git clone https://github.com/iAviPro/testteller-agent.git
-cd testteller-agent
-pip install -e .
+Create a local `.env` file from the safe example:
+
+```powershell
+copy .env.example .env
 ```
 
-### Basic Usage - Get Started in 2 Minutes
+Add your API key to `.env`:
 
-```bash
-# 1. Configure your LLM provider (interactive wizard)
-testteller configure
-
-# 2. Ingest your documentation (supports PDF, DOCX, XLSX, MD, TXT)
-testteller ingest-docs requirements.pdf --collection-name my_project
-
-# 3. Ingest code from repository or local folder
-testteller ingest-code https://github.com/user/repo --collection-name my_project
-# OR: testteller ingest-code ./src --collection-name my_project
-
-# 4. Generate strategic test cases with RAG context
-testteller generate "Create comprehensive API integration tests" --collection-name my_project --output-file tests.pdf
-
-# 5. Generate executable automation code
-testteller automate tests.pdf --language python --framework pytest --output-dir ./tests
+```env
+LLM_PROVIDER=gemini
+GOOGLE_API_KEY=your_api_key_here
 ```
 
-**Enhanced Examples:**
+Do not commit `.env`.
 
-```bash
-# E2E Testing Workflow
-testteller ingest-docs user_stories.pdf --collection-name webapp
-testteller ingest-code ./frontend --collection-name webapp  
-testteller generate "E2E user registration and checkout flow" --collection-name webapp
-testteller automate output.pdf --language javascript --framework cypress
+## Run Locally
 
-# API Testing with Security Focus
-testteller ingest-docs api_spec.pdf --collection-name api
-testteller generate "API security and integration tests" --collection-name api --output-format pdf
-testteller automate tests.pdf --language python --framework pytest
+Start the backend from the project root:
 
-# Microservices Testing
-testteller ingest-code ./services --collection-name microservices
-testteller generate "Inter-service communication and resilience tests" --collection-name microservices
-testteller automate output.pdf --language java --framework junit
+```powershell
+python -m testteller.main serve --host 127.0.0.1 --port 8080
 ```
 
-**What happens?** TestTeller's dual-feedback RAG analyzes your ingested docs and code, generates strategic test cases using structured templates (E2E, Integration, Technical, Mocked), then creates production-ready automation with proper setup, data management, and CI/CD integration.
+Start the frontend in another terminal:
 
-### Try TestTeller Now
-
-**No API Keys?** No problem - use local Llama:
-```bash
-# Install Ollama (macOS/Linux)  
-curl -fsSL https://ollama.ai/install.sh | sh
-ollama pull llama3.2
-
-# Configure TestTeller for local use
-testteller configure --provider llama
+```powershell
+cd frontend
+npm run dev -- --host 127.0.0.1
 ```
 
-## Docker Support
+Open the app:
 
-```bash
-# Clone and setup
-git clone https://github.com/iAviPro/testteller-agent.git
-cd testteller-agent
-cp .env.example .env  # Add your API keys
-docker-compose up -d
-
-# Use with Docker
-docker-compose exec app testteller configure
-docker-compose exec app testteller ingest-docs document.pdf --collection-name project
+```text
+http://127.0.0.1:3000
 ```
 
-## Documentation
+If port `3000` is already busy, Vite will show another local URL such as `http://127.0.0.1:3001`.
 
-- **[Complete Features](docs/FEATURES.md)** - Detailed feature descriptions and capabilities
-- **[Technical Architecture](docs/ARCHITECTURE.md)** - System design and technical details  
-- **[Command Reference](docs/COMMANDS.md)** - Complete CLI command documentation
-- **[Testing Guide](docs/TESTING.md)** - Test suite and validation documentation
+## Docker
 
-## Common Issues
+```powershell
+docker compose up --build
+```
 
-Run `testteller configure` if you encounter API key errors. For Docker issues, check logs with `docker-compose logs app`.
+Frontend:
 
+```text
+http://127.0.0.1:3000
+```
 
----
+Backend health check:
 
-## License
+```text
+http://127.0.0.1:8080/api/health
+```
 
-This project is licensed under the Apache-2.0 License - see the [LICENSE](LICENSE) file for details.
+## API Endpoints
+
+- `GET /api/health`
+- `GET /api/config/options`
+- `GET /api/collections/{collection}/status`
+- `POST /api/ingest/documents`
+- `POST /api/ingest/code`
+- `POST /api/generate`
+- `POST /api/automate`
+- `GET /api/jobs/{job_id}`
+- `GET /api/artifacts/{artifact_id}/download`
+
+## Testing
+
+Run backend API tests:
+
+```powershell
+python -m pytest tests\unit\test_api.py -q
+```
+
+Build frontend:
+
+```powershell
+cd frontend
+npm run build
+```
+
+## Environment Safety
+
+Real API keys must stay in `.env`, which is ignored by git. Commit only `.env.example` with placeholder values.
